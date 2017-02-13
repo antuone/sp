@@ -1,27 +1,50 @@
 #!/bin/bash
 
-folder_home="Изображения/Фото пломб"
+R=$(ls /mnt/ftp -l|grep '^d'| awk '{print $9}')
+R=$(zenity --list \
+  --title="Обнаружено USB устройство" \
+  --text="Для сохранения фоток выберите Рейс, а потом партию." \
+  --column="Рейс" ${R})
 
-folder=$(zenity --title "Обнаружен USB диск" --entry \
---text "Введите название папки для сохранения всех фотографий с этого диска\n \
-Папка с фотографиями сохранится в деррикторию /home/$USER/$folder_home\n \
-После сохранения все файлы с устройства будут УДАЛЕНЫ!")
-
-if [ $? -eq "0" ]
+if [ $? -eq "1" ]
 then
-	(
-	mkdir "/home/$USER/Изображения"
-	mkdir "/home/$USER/$folder_home"
-	mkdir "/home/$USER/$folder_home/$folder"
-	cp -R /mnt/disk/* "/home/$USER/$folder_home/$folder"
-	rm -rf /mnt/disk
-	sleep 3
-	) |
-	zenity --progress \
-	  --title="Перемещение фалов" \
-	  --text="Файлы перемещаются в папку /home/$USER/$folder_home/$folder" \
-	  --percentage=0
-
+    exit
 fi
+
+P=$(ls /mnt/ftp/${R} -l|grep '^d'| awk '{print $9}')
+P=$(zenity --list \
+  --title="Обнаружено USB устройство" \
+  --text="Веберите партию." \
+  --column="Партия" ${P})
+
+if [ $? -eq "1" ]
+then
+    exit
+fi
+
+ZV=$(zenity --list \
+  --title="Обнаружено USB устройство" \
+  --text="Загрузка или Выгрузка" \
+  --column="Направление"\
+  Загрузка Выгрузка)
+
+if [ $? -eq "1" ]
+then
+    exit
+fi
+
+(
+	echo "0"
+    cp -R /mnt/disk/* /mnt/ftp/${R}/${P}/${ZV}
+	echo "50"
+    rm -rf /mnt/disk
+	echo "90"
+    sleep 3
+	echo "100"
+) |
+zenity --progress \
+    --title="Перемещение фалов" \
+    --text="Файлы перемещаются на сервер в папку $R/$P/$ZV" \
+	--pulsate
 
 
