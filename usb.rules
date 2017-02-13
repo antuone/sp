@@ -1,0 +1,11 @@
+SUBSYSTEMS=="usb",\
+ENV{DEVTYPE}=="usb_device",\
+ENV{COLORD_KIND}=="camera",\
+ACTION=="add",\
+RUN+="/bin/bash /etc/udev/rules.d/sp/mtp.sh $BUSNUM $DEVNUM"
+
+SUBSYSTEMS=="usb",\
+ENV{DEVTYPE}=="disk",\
+ACTION=="add",\
+RUN+="/bin/bash /etc/udev/rules.d/sp/disk.sh $devnode"
+
