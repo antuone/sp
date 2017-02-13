@@ -17,3 +17,9 @@ echo "su $USER -c \"export DISPLAY=:0; bash -c '/etc/udev/rules.d/sp/mtp1.sh \$1
 cp disk1.sh /etc/udev/rules.d/sp/disk1.sh
 cp mtp1.sh /etc/udev/rules.d/sp/mtp1.sh
 cp usb.rules //etc/udev/rules.d/usb.rules
+
+chmod +x /etc/udev/rules.d/usb.rules
+chmod +x /etc/udev/rules.d/sp/disk.sh
+chmod +x /etc/udev/rules.d/sp/mtp.sh
+chmod +x /etc/udev/rules.d/sp/disk1.sh
+chmod +x /etc/udev/rules.d/sp/mtp1.sh
